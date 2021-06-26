@@ -30,7 +30,9 @@ reserved = {
     'do': 'DO',
     'List': 'LIST',
     'MutableList': 'MUTABLE_LIST',
-    'MutableSet': 'MUTABLE_SET'
+    'MutableSet': 'MUTABLE_SET',
+    'println': 'PRINTLN',
+    
 
 }
 
@@ -54,6 +56,8 @@ tokens = (
     'DOBLEIGUAL',
     'COMILLASIMPLE',
     'COMILLADOBLE',
+    'PUNTO',
+    'COMA',
     'ID',
 ) + tuple( reserved.values() )
 
@@ -74,6 +78,8 @@ t_MASIGUAL = r'\+='
 t_DOBLEIGUAL =r'\={2}'
 t_COMILLASIMPLE = r'\''
 t_COMILLADOBLE = r'\"'
+t_COMA= r'\,'
+t_PUNTO= r'\.'
 
 def t_NUMERO(t):
     r'\d+'
@@ -91,6 +97,10 @@ def t_error(t):
     
     print("Carácter no permitido '%s'" % t.value[0])
     t.lexer.skip(1)
+
+def t_COMENT(t):
+    r'\/\*.*\*/'
+    pass
 
 t_ignore = ' \t'
 
