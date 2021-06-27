@@ -32,7 +32,10 @@ reserved = {
     'MutableList': 'MUTABLE_LIST',
     'MutableSet': 'MUTABLE_SET',
     'println': 'PRINTLN',
-    
+    'readLine': 'READ_LINE',
+    'get': 'GET',
+    'add': 'ADD',
+    'mutableListOf': 'MUTABLE_LIST_OF'
 
 }
 
@@ -82,7 +85,7 @@ t_COMA= r'\,'
 t_PUNTO= r'\.'
 
 def t_NUMERO(t):
-    r'\d+'
+    r'(-?[1-9]\d*)|0'
     t.value = int(t.value)
     return t
 
@@ -97,6 +100,11 @@ def t_error(t):
     
     print("Carácter no permitido '%s'" % t.value[0])
     t.lexer.skip(1)
+
+
+def t_newline(t):
+     r'\n+'
+     t.lexer.lineno += len(t.value)
 
 def t_COMENT(t):
     r'\/\*.*\*/'
@@ -116,6 +124,7 @@ def getTokens(lexer):
         print(tok)
 
 lexer = lex.lex()
+"""
 linea = " "
 
 while linea != "":
@@ -125,3 +134,5 @@ while linea != "":
     getTokens(lexer)
 
 print("Ejecución terminada")
+
+"""
