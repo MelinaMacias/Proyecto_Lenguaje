@@ -1,28 +1,120 @@
+
 import ply.yacc as yacc
 
 
 from main import tokens
 
-def p_algoritmo(p):
-    '''algoritmo : declaracion
-                   | comparacion
+def p_sentencias(p):
+    '''sentencias : declaracion
+					| expresion
+					| estructuras_control
                     | imprimir
-                    | agregarElemento
-                    | obtenerElemento
-                    | crearLista
+					| operacionesEstructuras
+					| declaracionFunciones
     '''
+
+def p_expresion(p):
+	'''expresion : asignacion
+					| comparacion
+					| operacionesBasicas
+	'''
+
+
+def p_estructuras_control(p):
+	'''estructuras_control : ifSimple
+							| ifElse
+							| while
+	'''
+
+
+def p_operacionesBasicas(p):
+	'''operacionesBasicas : sumaValores
+							| multValores
+	'''
+
+
+def p_operacionesEstructuras(p):
+	'''operacionesEstructuras : agregarElementoLista
+                    			| obtenerElementoLista
+                    			| obtenerIteradorConjunto
+                    			| borrarElementosConjunto
+	'''
+
+
+def p_declaracionFunciones(p):
+	'declaracionFunciones : FUN ID LPAREN secuenciaParametros RPAREN LLLAVE sentencias RLLAVE'
+
+
+def p_ifSimple(p):
+	'ifSimple : IF LPAREN expresion RPAREN LLLAVE sentencias RLLAVE'
+
+
+def p_ifElse(p):
+	'''ifElse : ifSimple ELSE LLLAVE sentencias RLLAVE
+				| ifSimple ELSE ifSimple'''
+
+
+def p_while(p):
+	'while : WHILE LPAREN expresion RPAREN LLLAVE sentencias RLLAVE'
+
+
+def p_secuenciaNumeros(p):
+	'''secuenciaNumeros : NUMERO
+						| NUMERO COMA secuenciaNumeros
+	'''
+
+
+def p_secuenciaBooleanos(p):
+	'''secuenciaBooleanos : booleano
+					| booleano COMA secuenciaBooleanos
+	'''
+
+
+def p_secuenciaIdentificadores(p):
+	'''secuenciaIdentificadores : ID
+					| ID COMA secuenciaIdentificadores
+	'''
+
+
+def p_secuencia(p):
+	'''secuencia : secuenciaNumeros
+				| secuenciaBooleanos
+				| secuenciaIdentificadores
+	'''
+
+
+def p_secuenciaParametros(p):
+	'''secuenciaParametros : ID DOSPUNT tipoDato
+							| ID DOSPUNT tipoDato COMA secuenciaParametros
+	'''
+
+
+def p_asignacion(p):
+	'''asignacion : ID asignacion_simple
+					| ID asignacion_suma
+	'''
 
 def p_declaracion(p):
     '''declaracion :  declaracion_conTipo
-                    |
+                    | declaracion_sinTipo
+                    | crearLista
+					| crearConjunto
     '''
-def p_declaracion_conTipo(p):
-    'declaracion_conTipo : tipoVariable ID DOSPUNT tipoDato asignacion '
 
-def p_tipoVariable(p):
-    '''tipoVariable : VAR
+
+def p_declaracion_conTipo(p):
+    'declaracion_conTipo : tipoIdentificador ID DOSPUNT tipoDato asignacion_declaracion'
+
+
+def p_declaracion_sinTipo(p):
+    'declaracion_sinTipo : tipoIdentificador ID asignacion_declaracion'	
+
+
+def p_tipoIdentificador(p):
+    '''tipoIdentificador : VAR
                     | VAL
     '''
+
 
 def p_tipoDato(p):
     '''tipoDato :  INTEGER
@@ -35,12 +127,28 @@ def p_booleano(p):
            '''
 
 
-def p_asignacion(p):
-    ''' asignacion : asignacion_simple
-                    |
+def p_asignacion_declaracion(p):
+    ''' asignacion_declaracion : asignacion_simple
+                    | asignacion_suma
     '''
+
+
 def p_asignacion_simple(p):
-    'asignacion_simple : IGUAL valor '
+    '''asignacion_simple : IGUAL valor
+							| IGUAL operacionesBasicas
+	'''
+
+
+def p_asignacion_suma(p):
+    '''asignacion_suma : MASIGUAL valor
+						| MASIGUAL operacionesBasicas
+	'''
+
+def p_sumaValores(p):
+	'sumaValores : valor MAS valor'
+
+def p_multValores(p):
+	'multValores : valor MULTI valor'
 
 def p_valor(p):
     '''valor :    NUMERO
@@ -48,32 +156,49 @@ def p_valor(p):
                 | booleano
     '''
 
+
 def p_comparacion(p):
-    '''comparacion : comparacion_igual
-                    | comparacion_mayor
-                    |
+    '''comparacion : comparacion_igualdad
+                    | comparacion_menorque
     '''
 
-def p_comparacion_igual(p):
-    'comparacion_igual :  DOBLEIGUAL '
 
-def p_comparacion_mayor(p):
-    'comparacion_mayor :  MAYOR '
+def p_comparacion_igualdad(p):
+    '''comparacion_igualdad : valor DOBLEIGUAL valor
+	'''
+
+
+def p_comparacion_menorque(p):
+    '''comparacion_menorque : valor MENOR valor
+	'''
 
 
 def p_imprimir(p):
     'imprimir : PRINTLN LPAREN valor RPAREN'
 
+
 def  p_crearLista(p):
-    'crearLista : VAL ID DOSPUNT MUTABLE_LIST MENOR tipoDato MAYOR IGUAL MUTABLE_LIST_OF LPAREN valor RPAREN'
+    'crearLista : tipoIdentificador ID DOSPUNT MUTABLE_LIST MENOR tipoDato MAYOR IGUAL MUTABLE_LIST_OF LPAREN secuencia RPAREN'
 
 
+def  p_crearConjunto(p):
+    'crearConjunto : tipoIdentificador ID DOSPUNT MUTABLE_SET MENOR tipoDato MAYOR IGUAL MUTABLE_SET_OF LPAREN secuencia RPAREN'
 
-def p_agregarElemento(p):
-    'agregarElemento : ID PUNTO ADD LPAREN valor RPAREN'
 
-def p_obtenerElemento(p):
-    'obtenerElemento : ID PUNTO GET LPAREN NUMERO RPAREN'
+def p_agregarElementoLista(p):
+    'agregarElementoLista : ID PUNTO ADD LPAREN valor RPAREN'
+
+
+def p_obtenerElementoLista(p):
+    'obtenerElementoLista : ID PUNTO GET LPAREN NUMERO RPAREN'
+
+
+def p_obtenerIteradorConjunto(p):
+	'obtenerIteradorConjunto : ID PUNTO GET_ITERATOR LPAREN RPAREN'
+
+
+def p_borrarElementosConjunto(p):
+	'borrarElementosConjunto : ID PUNTO CLEAR_ALL LPAREN RPAREN'
 
 
 # Build the parser
