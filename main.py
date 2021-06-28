@@ -11,7 +11,7 @@ reserved = {
     'is': 'IS',
     'while' : 'WHILE',
     'for': 'FOR',
-    'fun': 'DEF',
+    'fun': 'FUN',
     'val': 'VAL',
     'var': 'VAR',
     'Boolean': 'BOOLEAN',
@@ -35,7 +35,10 @@ reserved = {
     'readLine': 'READ_LINE',
     'get': 'GET',
     'add': 'ADD',
-    'mutableListOf': 'MUTABLE_LIST_OF'
+	'iterator': "GET_ITERATOR",
+	'clear': "CLEAR_ALL",
+    'mutableListOf': 'MUTABLE_LIST_OF',
+    'mutableSetOf': 'MUTABLE_SET_OF'
 
 }
 
