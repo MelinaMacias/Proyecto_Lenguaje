@@ -69,28 +69,15 @@ def p_while(p):
 	'while : WHILE LPAREN expresion RPAREN LLLAVE sentencias RLLAVE'
 
 
-def p_secuenciaNumeros(p):
-	'''secuenciaNumeros : NUMERO
-						| NUMERO COMA secuenciaNumeros
+def p_secuenciaNumerosOrId(p):
+	'''secuenciaNumerosOrId : numeroOrId
+						| numeroOrId COMA secuenciaNumerosOrId
 	'''
 
 
-def p_secuenciaBooleanos(p):
-	'''secuenciaBooleanos : booleano
-					| booleano COMA secuenciaBooleanos
-	'''
-
-
-def p_secuenciaIdentificadores(p):
-	'''secuenciaIdentificadores : ID
-					| ID COMA secuenciaIdentificadores
-	'''
-
-
-def p_secuencia(p):
-	'''secuencia : secuenciaNumeros
-				| secuenciaBooleanos
-				| secuenciaIdentificadores
+def p_secuenciaBooleanosOrId(p):
+	'''secuenciaBooleanosOrId : booleanoOrId
+					| booleanoOrId COMA secuenciaBooleanosOrId
 	'''
 
 
@@ -113,10 +100,13 @@ def p_declaracion(p):
 					| crearConjunto
     '''
 
+#Elaborado por Melina Macías-Regla semantica
+#Declaracion de variables sujetas al tipo de dato
 
 def p_declaracion_conTipo(p):
-    'declaracion_conTipo : tipoIdentificador ID DOSPUNT tipoDato asignacion_declaracion'
-
+    '''declaracion_conTipo : tipoIdentificador ID DOSPUNT INTEGER IGUAL numeroOrId
+							| tipoIdentificador ID DOSPUNT BOOLEAN IGUAL booleanoOrId
+						'''
 
 def p_declaracion_sinTipo(p):
     'declaracion_sinTipo : tipoIdentificador ID asignacion_declaracion'	
@@ -203,12 +193,19 @@ def p_imprimir(p):
     'imprimir : PRINTLN LPAREN valor RPAREN'
 
 
+#Elaborador por Melina Macias - Regla semantica
+#Creacion de estructuras de datos acorde al tipo de dato
+
 def  p_crearLista(p):
-    'crearLista : tipoIdentificador ID DOSPUNT MUTABLE_LIST MENOR tipoDato MAYOR IGUAL MUTABLE_LIST_OF LPAREN secuencia RPAREN'
+    '''crearLista : tipoIdentificador ID DOSPUNT MUTABLE_LIST MENOR INTEGER MAYOR IGUAL MUTABLE_LIST_OF LPAREN secuenciaNumerosOrId RPAREN
+    				| tipoIdentificador ID DOSPUNT MUTABLE_LIST MENOR BOOLEAN MAYOR IGUAL MUTABLE_LIST_OF LPAREN secuenciaBooleanosOrId RPAREN
+    				'''
 
 
 def  p_crearConjunto(p):
-    'crearConjunto : tipoIdentificador ID DOSPUNT MUTABLE_SET MENOR tipoDato MAYOR IGUAL MUTABLE_SET_OF LPAREN secuencia RPAREN'
+    '''crearConjunto : tipoIdentificador ID DOSPUNT MUTABLE_SET MENOR INTEGER MAYOR IGUAL MUTABLE_SET_OF LPAREN secuenciaNumerosOrId RPAREN
+    				| 	tipoIdentificador ID DOSPUNT MUTABLE_SET MENOR BOOLEAN MAYOR IGUAL MUTABLE_SET_OF LPAREN secuenciaBooleanosOrId RPAREN
+    					'''
 
 
 def p_agregarElementoLista(p):
