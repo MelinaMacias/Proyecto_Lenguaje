@@ -11,7 +11,11 @@ def p_sentencias(p):
                     | imprimir
 					| operacionesEstructuras
 					| declaracionFunciones
+					| funcionesTipoDato
+
+
     '''
+
 
 def p_expresion(p):
 	'''expresion : asignacion
@@ -30,6 +34,14 @@ def p_estructuras_control(p):
 def p_operacionesBasicas(p):
 	'''operacionesBasicas : sumaValores
 							| multValores
+	'''
+
+
+def p_funcionesTipoDato(p):
+	'''funcionesTipoDato : encontrarMayor
+			| encontrarMenor
+			| convertirABoolean
+			| comparacionBooleanos
 	'''
 
 
@@ -86,6 +98,7 @@ def p_secuencia(p):
 def p_secuenciaParametros(p):
 	'''secuenciaParametros : ID DOSPUNT tipoDato
 							| ID DOSPUNT tipoDato COMA secuenciaParametros
+
 	'''
 
 
@@ -128,9 +141,7 @@ def p_booleano(p):
 
 
 def p_asignacion_declaracion(p):
-    ''' asignacion_declaracion : asignacion_simple
-                    | asignacion_suma
-    '''
+    ' asignacion_declaracion : asignacion_simple'
 
 
 def p_asignacion_simple(p):
@@ -147,8 +158,10 @@ def p_asignacion_suma(p):
 def p_sumaValores(p):
 	'sumaValores : valor MAS valor'
 
+
 def p_multValores(p):
 	'multValores : valor MULTI valor'
+
 
 def p_valor(p):
     '''valor :    NUMERO
@@ -199,6 +212,37 @@ def p_obtenerIteradorConjunto(p):
 
 def p_borrarElementosConjunto(p):
 	'borrarElementosConjunto : ID PUNTO CLEAR_ALL LPAREN RPAREN'
+
+#Elaborado por Melina Macias -
+#Validación semantica para los argumentos de las funciones que trabajan con tipos de datos.
+
+def p_encontrarMayor(p):
+	'encontrarMayor : INTEGER PUNTO MAX LPAREN numeroOrId COMA numeroOrId RPAREN'
+
+
+def p_encontrarMenor(p):
+	'encontrarMenor : INTEGER PUNTO MIN LPAREN numeroOrId COMA numeroOrId RPAREN'
+
+
+def p_numeroOrId(p):
+	'''numeroOrId : NUMERO
+					| ID
+	'''
+
+
+def p_convertirABoolean(p):
+	'convertirABoolean : BOOLEAN PUNTO VALUEOF LPAREN valor RPAREN'
+
+
+def p_comparacionBooleanos(p):
+	'comparacionBooleanos : BOOLEAN PUNTO COMPARETO LPAREN booleanoOrId RPAREN'
+
+
+def p_booleanoOrId(p):
+	'''booleanoOrId : booleano
+					| ID
+	'''
+
 
 
 # Build the parser
