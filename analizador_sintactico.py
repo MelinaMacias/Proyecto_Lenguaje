@@ -13,7 +13,6 @@ def p_sentencias(p):
 					| declaracionFunciones
 					| funcionesTipoDato
 
-
     '''
 
 
@@ -155,12 +154,20 @@ def p_asignacion_suma(p):
 						| MASIGUAL operacionesBasicas
 	'''
 
+
+# Reglas semanticas suma de valores, 
+# * Solo permitidas con números o variables
+###################################################################
 def p_sumaValores(p):
-	'sumaValores : valor MAS valor'
+	'sumaValores : numeroOrId MAS numeroOrId'
 
 
+# Reglas semanticas multiplicación de valores, 
+# * Solo permitidas con números o variables
+###################################################################
 def p_multValores(p):
-	'multValores : valor MULTI valor'
+	'multValores : numeroOrId MULTI numeroOrId'
+
 
 
 def p_valor(p):
@@ -169,20 +176,26 @@ def p_valor(p):
                 | booleano
     '''
 
-
 def p_comparacion(p):
     '''comparacion : comparacion_igualdad
                     | comparacion_menorque
     '''
 
 
+
+# Reglas semanticas de comparacion
+# * Solo permitidas entre números o variables,
+# o solo entre booleanos o variables
+###################################################################
 def p_comparacion_igualdad(p):
-    '''comparacion_igualdad : valor DOBLEIGUAL valor
+    '''comparacion_igualdad : numeroOrId DOBLEIGUAL numeroOrId
+							| booleanoOrId DOBLEIGUAL booleanoOrId
 	'''
 
 
 def p_comparacion_menorque(p):
-    '''comparacion_menorque : valor MENOR valor
+    '''comparacion_menorque : numeroOrId MENOR numeroOrId
+							| booleanoOrId MENOR booleanoOrId
 	'''
 
 
@@ -224,18 +237,18 @@ def p_encontrarMenor(p):
 	'encontrarMenor : INTEGER PUNTO MIN LPAREN numeroOrId COMA numeroOrId RPAREN'
 
 
-def p_numeroOrId(p):
-	'''numeroOrId : NUMERO
-					| ID
-	'''
-
-
 def p_convertirABoolean(p):
 	'convertirABoolean : BOOLEAN PUNTO VALUEOF LPAREN valor RPAREN'
 
 
 def p_comparacionBooleanos(p):
 	'comparacionBooleanos : BOOLEAN PUNTO COMPARETO LPAREN booleanoOrId RPAREN'
+
+
+def p_numeroOrId(p):
+	'''numeroOrId : NUMERO
+					| ID
+	'''
 
 
 def p_booleanoOrId(p):
