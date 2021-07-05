@@ -3,7 +3,6 @@ import ply.lex as lex
 
 # Lista de palabras reservadas
 reserved = {
-
     'if' : 'IF',
     'else' : 'ELSE',
     'final' : 'FINAL',
@@ -38,7 +37,11 @@ reserved = {
 	'iterator': "GET_ITERATOR",
 	'clear': "CLEAR_ALL",
     'mutableListOf': 'MUTABLE_LIST_OF',
-    'mutableSetOf': 'MUTABLE_SET_OF'
+    'mutableSetOf': 'MUTABLE_SET_OF',
+	'max':'MAX',
+	'min': 'MIN',
+	'valueOf': 'VALUEOF',
+	'compareTo': 'COMPARETO'
 
 }
 
