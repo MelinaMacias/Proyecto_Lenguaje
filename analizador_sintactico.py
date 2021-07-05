@@ -6,20 +6,23 @@ from main import tokens
 
 def p_sentencias(p):
     '''sentencias : declaracion
+					| asignacion
 					| expresion
 					| estructuras_control
                     | imprimir
+					| obtenerEntrada
+					| operacionesBasicas
 					| operacionesEstructuras
 					| declaracionFunciones
 					| funcionesTipoDato
+					| casting
 
     '''
 
 
 def p_expresion(p):
-	'''expresion : asignacion
-					| comparacion
-					| operacionesBasicas
+	'''expresion : comparacion
+					| LPAREN expresion RPAREN
 	'''
 
 
@@ -30,9 +33,11 @@ def p_estructuras_control(p):
 	'''
 
 
+def p_casting(p):
+	'''casting : LPAREN tipoDato RPAREN valor'''
+
 def p_operacionesBasicas(p):
-	'''operacionesBasicas : sumaValores
-							| multValores
+	'''operacionesBasicas : operacionesNumeros
 	'''
 
 
@@ -53,20 +58,25 @@ def p_operacionesEstructuras(p):
 
 
 def p_declaracionFunciones(p):
-	'declaracionFunciones : FUN ID LPAREN secuenciaParametros RPAREN LLLAVE sentencias RLLAVE'
+	'declaracionFunciones : FUN ID LPAREN secuenciaParametros RPAREN LLLAVE sentenciasAnidadas RLLAVE'
 
 
 def p_ifSimple(p):
-	'ifSimple : IF LPAREN expresion RPAREN LLLAVE sentencias RLLAVE'
+	'ifSimple : IF LPAREN expresion RPAREN LLLAVE sentenciasAnidadas RLLAVE'
 
 
 def p_ifElse(p):
-	'''ifElse : ifSimple ELSE LLLAVE sentencias RLLAVE
+	'''ifElse : ifSimple ELSE LLLAVE sentenciasAnidadas RLLAVE
 				| ifSimple ELSE ifSimple'''
 
 
+def p_sentenciasAnidadas(p):
+	'''sentenciasAnidadas : sentencias 
+						| sentencias sentenciasAnidadas
+	'''
+
 def p_while(p):
-	'while : WHILE LPAREN expresion RPAREN LLLAVE sentencias RLLAVE'
+	'while : WHILE LPAREN expresion RPAREN LLLAVE sentenciasAnidadas RLLAVE'
 
 
 def p_secuenciaNumerosOrId(p):
@@ -93,6 +103,7 @@ def p_asignacion(p):
 					| ID asignacion_suma
 	'''
 
+
 def p_declaracion(p):
     '''declaracion :  declaracion_conTipo
                     | declaracion_sinTipo
@@ -100,11 +111,13 @@ def p_declaracion(p):
 					| crearConjunto
     '''
 
+
 #Elaborado por Melina Macías-Regla semantica
 #Declaracion de variables sujetas al tipo de dato
 
 def p_declaracion_conTipo(p):
     '''declaracion_conTipo : tipoIdentificador ID DOSPUNT INTEGER IGUAL numeroOrId
+							| tipoIdentificador ID DOSPUNT INTEGER IGUAL operacionesNumeros
 							| tipoIdentificador ID DOSPUNT BOOLEAN IGUAL booleanoOrId
 						'''
 
@@ -136,29 +149,36 @@ def p_asignacion_declaracion(p):
 def p_asignacion_simple(p):
     '''asignacion_simple : IGUAL valor
 							| IGUAL operacionesBasicas
+							| IGUAL obtenerEntrada
+							| IGUAL obtenerElementoLista
+							| IGUAL casting
 	'''
 
 
 def p_asignacion_suma(p):
-    '''asignacion_suma : MASIGUAL valor
+    '''asignacion_suma : MASIGUAL numeroOrId
 						| MASIGUAL operacionesBasicas
+						| MASIGUAL casting
 	'''
 
 
-# Reglas semanticas suma de valores, 
+# Reglas semanticas para las operaciones de suma y multiplicacion
 # * Solo permitidas con números o variables
 ###################################################################
-def p_sumaValores(p):
-	'sumaValores : numeroOrId MAS numeroOrId'
+
+def p_operacionesNumeros(p):
+	'''operacionesNumeros : numeroOrId operacionIntermedia'''
 
 
-# Reglas semanticas multiplicación de valores, 
-# * Solo permitidas con números o variables
-###################################################################
-def p_multValores(p):
-	'multValores : numeroOrId MULTI numeroOrId'
+def p_operacionIntermedia(p):
+	'''operacionIntermedia : operadorNumeros numeroOrId
+							| operadorNumeros numeroOrId operacionIntermedia
+	'''
 
-
+def p_operadorNumeros(p):
+	'''operadorNumeros : MAS 
+						| MULTI
+	'''
 
 def p_valor(p):
     '''valor :    NUMERO
@@ -174,23 +194,29 @@ def p_comparacion(p):
 
 
 # Reglas semanticas de comparacion
-# * Solo permitidas entre números o variables,
-# o solo entre booleanos o variables
 ###################################################################
 def p_comparacion_igualdad(p):
     '''comparacion_igualdad : numeroOrId DOBLEIGUAL numeroOrId
 							| booleanoOrId DOBLEIGUAL booleanoOrId
+							| expresion DOBLEIGUAL expresion
 	'''
 
 
 def p_comparacion_menorque(p):
     '''comparacion_menorque : numeroOrId MENOR numeroOrId
 							| booleanoOrId MENOR booleanoOrId
+							| expresion MENOR expresion
 	'''
 
 
+def p_obtenerEntrada(p):
+	'obtenerEntrada : READ_LINE LPAREN RPAREN'
+
+
 def p_imprimir(p):
-    'imprimir : PRINTLN LPAREN valor RPAREN'
+    '''imprimir : PRINTLN LPAREN valor RPAREN
+				| PRINTLN LPAREN obtenerElementoLista RPAREN
+	'''
 
 
 #Elaborador por Melina Macias - Regla semantica
@@ -213,7 +239,7 @@ def p_agregarElementoLista(p):
 
 
 def p_obtenerElementoLista(p):
-    'obtenerElementoLista : ID PUNTO GET LPAREN NUMERO RPAREN'
+    'obtenerElementoLista : ID PUNTO GET LPAREN numeroOrId RPAREN'
 
 
 def p_obtenerIteradorConjunto(p):
@@ -257,14 +283,33 @@ def p_booleanoOrId(p):
 
 # Build the parser
 
-
 parser = yacc.yacc()
 
-while True:
-    try:
-        s = input('calc > ')
-    except EOFError:
-        break
-    if not s: continue
-    result = parser.parse(s)
-    print(result)
+# Algoritmo de prueba 
+###################################################################
+algoritmo = '''
+
+var listaCodigos:MutableList<Integer> = mutableListOf(1111, 1204, 2223, 4245);
+var numeroCodigo:Integer = 0;
+var entrada = readLine();
+
+numeroCodigo = (Integer) entrada;
+
+if( codigo < 4) { 
+	
+	var contador:Integer = 0
+	while( contador < 4 ) { 
+		
+		println( listaCodigos.get(contador) )
+		contador += 1
+	
+	}
+
+}
+
+'''.split(";")
+
+for x in range( len(algoritmo) ):
+
+	result = parser.parse(algoritmo[x])
+	print(result)
