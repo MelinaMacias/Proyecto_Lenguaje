@@ -1,6 +1,6 @@
 
 # **Proyecto Lenguajes de Programación**
-## **Analizador lexico y sintáctico** 
+## **Analizador léxico, sintáctico y semántico** 
 
 **Paralelo:** 1
 
