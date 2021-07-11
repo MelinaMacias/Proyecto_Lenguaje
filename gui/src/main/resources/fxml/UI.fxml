@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="616.0" prefWidth="795.0" style="-fx-background-color: #DDDDDD;" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ec.edu.espol.lpgrupo8.controllers.UIController">
+   <children>
+      <AnchorPane layoutX="-1.0" layoutY="1.0" prefHeight="435.0" prefWidth="372.0" styleClass="subContainer">
+         <children>
+            <Text layoutX="126.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Editor">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Text>
+            <TextArea id="codeEditor" fx:id="codeInput" layoutX="16.0" layoutY="57.0" prefHeight="361.0" prefWidth="341.0" styleClass="outputSection" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextArea>
+         </children>
+         <effect>
+            <DropShadow height="0.0" radius="1.0425" width="6.17" />
+         </effect>
+      </AnchorPane>
+      <AnchorPane id="errorContainer" layoutX="-1.0" layoutY="439.0" prefHeight="177.0" prefWidth="795.0" styleClass="subContainer">
+         <children>
+            <Text layoutX="25.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Advertencias o Errores">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <TextArea fx:id="errorView" editable="false" layoutX="20.0" layoutY="47.0" prefHeight="115.0" prefWidth="756.0" styleClass="outputSection" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextArea>
+         </children>
+      </AnchorPane>
+      <Separator layoutY="437.0" prefHeight="2.0" prefWidth="795.0" />
+      
+      <ComboBox id="viewPicker" fx:id="viewPicker" layoutX="521.0" layoutY="25.0" onAction="#changeView" prefHeight="25.0" prefWidth="251.0" promptText="Seleccionar vista" />
+      
+      <Text layoutX="389.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Seleccionar vista">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <TextArea fx:id="resultView" editable="false" layoutX="392.0" layoutY="109.0" prefHeight="313.0" prefWidth="383.0" styleClass="outputSection" wrapText="true">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextArea>
+      <Label fx:id="viewLabel" alignment="CENTER" layoutX="392.0" layoutY="63.0" prefHeight="38.0" prefWidth="383.0" style="-fx-alignment: center;" text="Seleccionar vista">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Hyperlink fx:id="reloadBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="700.0" layoutY="73.0" onAction="#reloadChecker" prefHeight="23.0" prefWidth="74.0" text="Reanalizar" textAlignment="CENTER" />
+   </children>
+</AnchorPane>
