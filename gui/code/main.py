@@ -78,7 +78,6 @@ t_COMA = r'\,'
 t_PUNTO = r'\.'
 t_CADENA = r'"[a-zA-z0-9\s]*"'
 
-
 def t_FLOTANTE(t):
     r'(-?[1-9]\d*\.\d+)|0.0'
     t.value = float(t.value)

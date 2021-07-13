@@ -2,7 +2,6 @@
 import re
 import sys
 import json
-
 import ply.yacc as yacc
 
 from main import tokens
@@ -149,9 +148,9 @@ def p_tipoDato(p):
        '''
 
 def p_booleano(p):
-    '''booleano :  TRUE
+    '''booleano : TRUE
                 | FALSE
-           '''
+    '''
 
 
 def p_asignacion_declaracion(p):
