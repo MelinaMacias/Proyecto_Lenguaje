@@ -1,7 +1,6 @@
 
 import ply.yacc as yacc
 
-
 from main import tokens
 
 def p_sentencias(p):
@@ -34,11 +33,18 @@ def p_estructuras_control(p):
 
 
 def p_casting(p):
-	'''casting : LPAREN tipoDato RPAREN valor'''
+	'''casting :  numeroOrId CASTOPERATOR INTEGER
+				| flotanteOrId CASTOPERATOR FLOAT
+				| numeroOrId CASTOPERATOR FLOAT
+				| flotanteOrId CASTOPERATOR STRING
+				| CADENA CASTOPERATOR FLOAT
+				| CADENA CASTOPERATOR INTEGER
+				| numeroOrId CASTOPERATOR STRING
+	'''
+
 
 def p_operacionesBasicas(p):
-	'''operacionesBasicas : operacionesNumeros
-	'''
+	'''operacionesBasicas : operacionesNumeros'''
 
 
 def p_funcionesTipoDato(p):
@@ -157,6 +163,7 @@ def p_asignacion_simple(p):
 
 def p_asignacion_suma(p):
     '''asignacion_suma : MASIGUAL numeroOrId
+    					| MASIGUAL FLOTANTE
 						| MASIGUAL operacionesBasicas
 						| MASIGUAL casting
 	'''
@@ -167,12 +174,16 @@ def p_asignacion_suma(p):
 ###################################################################
 
 def p_operacionesNumeros(p):
-	'''operacionesNumeros : numeroOrId operacionIntermedia'''
+	'''operacionesNumeros : numeroOrId operacionIntermedia
+							| flotanteOrId operacionIntermedia
+	'''
 
 
 def p_operacionIntermedia(p):
 	'''operacionIntermedia : operadorNumeros numeroOrId
+							| operadorNumeros flotanteOrId
 							| operadorNumeros numeroOrId operacionIntermedia
+							| operadorNumeros flotanteOrId operacionIntermedia
 	'''
 
 def p_operadorNumeros(p):
@@ -181,7 +192,9 @@ def p_operadorNumeros(p):
 	'''
 
 def p_valor(p):
-    '''valor :    NUMERO
+    '''valor :    ENTERO
+    			| FLOTANTE
+				| CADENA
                 | ID
                 | booleano
     '''
@@ -197,14 +210,22 @@ def p_comparacion(p):
 ###################################################################
 def p_comparacion_igualdad(p):
     '''comparacion_igualdad : numeroOrId DOBLEIGUAL numeroOrId
+							| ID DOBLEIGUAL numeroOrId
+							| flotanteOrId DOBLEIGUAL flotanteOrId
+							| ID DOBLEIGUAL flotanteOrId
 							| booleanoOrId DOBLEIGUAL booleanoOrId
+							| ID DOBLEIGUAL booleanoOrId
 							| expresion DOBLEIGUAL expresion
 	'''
 
 
 def p_comparacion_menorque(p):
     '''comparacion_menorque : numeroOrId MENOR numeroOrId
+							| ID MENOR numeroOrId
+							| flotanteOrId MENOR flotanteOrId
+							| ID MENOR flotanteOrId
 							| booleanoOrId MENOR booleanoOrId
+							| ID MENOR booleanoOrId
 							| expresion MENOR expresion
 	'''
 
@@ -249,8 +270,10 @@ def p_obtenerIteradorConjunto(p):
 def p_borrarElementosConjunto(p):
 	'borrarElementosConjunto : ID PUNTO CLEAR_ALL LPAREN RPAREN'
 
+
 #Elaborado por Melina Macias -
 #Validación semantica para los argumentos de las funciones que trabajan con tipos de datos.
+
 
 def p_encontrarMayor(p):
 	'encontrarMayor : INTEGER PUNTO MAX LPAREN numeroOrId COMA numeroOrId RPAREN'
@@ -269,8 +292,14 @@ def p_comparacionBooleanos(p):
 
 
 def p_numeroOrId(p):
-	'''numeroOrId : NUMERO
+	'''numeroOrId : ENTERO
 					| ID
+	'''
+
+
+def p_flotanteOrId(p):
+	'''flotanteOrId : FLOTANTE
+						| ID
 	'''
 
 
@@ -279,6 +308,12 @@ def p_booleanoOrId(p):
 					| ID
 	'''
 
+def p_error(p):
+
+	errorFormat = ("Error sintáctico sentencia errónea Linea: {0}, columna: {1}"
+		.format(p.lineno, p.lexpos) )
+
+	print(errorFormat)
 
 
 # Build the parser
