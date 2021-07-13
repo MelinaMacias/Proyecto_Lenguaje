@@ -10,50 +10,39 @@ dumpErrors = []
 reserved = {
     'if' : 'IF',
     'else' : 'ELSE',
-    'final' : 'FINAL',
-    'in': 'IN',
-    'is': 'IS',
     'while' : 'WHILE',
-    'for': 'FOR',
     'fun': 'FUN',
     'val': 'VAL',
     'var': 'VAR',
     'Boolean': 'BOOLEAN',
     'Integer': 'INTEGER',
-    'null': 'NULL',
+    'Double': 'FLOAT',
+    'as': "CASTOPERATOR",
+    'String': "STRING",
     'true': 'TRUE',
     'false': 'FALSE',
-    'this': 'THIS',
-    'object': 'OBJECT',
-    'package': 'PACKAGE',
-    'return': 'RETURN',
-    'super': 'SUPER',
-    'throw': 'THROW',
-    'try': 'TRY',
-    'enum': 'ENUM',
-    'do': 'DO',
-    'List': 'LIST',
     'MutableList': 'MUTABLE_LIST',
     'MutableSet': 'MUTABLE_SET',
     'println': 'PRINTLN',
     'readLine': 'READ_LINE',
     'get': 'GET',
     'add': 'ADD',
-	'iterator': "GET_ITERATOR",
-	'clear': "CLEAR_ALL",
+    'iterator': "GET_ITERATOR",
+    'clear': "CLEAR_ALL",
     'mutableListOf': 'MUTABLE_LIST_OF',
     'mutableSetOf': 'MUTABLE_SET_OF',
-	'max':'MAX',
-	'min': 'MIN',
-	'valueOf': 'VALUEOF',
-	'compareTo': 'COMPARETO'
+    'max':'MAX',
+    'min': 'MIN',
+    'valueOf': 'VALUEOF',
+    'compareTo': 'COMPARETO'
 
 }
 
 #Parte realizada por Melina Macias
 #Definicion de tokens
 tokens = (
-    'NUMERO',
+    'ENTERO',
+    'FLOTANTE',
     'MAS',
     'MULTI',
     'MAYOR',
@@ -62,17 +51,14 @@ tokens = (
     'RPAREN',
     'RLLAVE',
     'LLLAVE',
-    'LCORCH',
-    'RCORCH',
     'DOSPUNT',
     'IGUAL',
     'MASIGUAL',
     'DOBLEIGUAL',
-    'COMILLASIMPLE',
-    'COMILLADOBLE',
     'PUNTO',
     'COMA',
     'ID',
+    "CADENA",
 ) + tuple( reserved.values() )
 
 #ER para tokens definidos
@@ -84,18 +70,21 @@ t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_LLLAVE = r'\{'
 t_RLLAVE = r'\}'
-t_LCORCH = r'\['
-t_RCORCH = r'\]'
 t_DOSPUNT = r'\:'
 t_IGUAL = r'\='
 t_MASIGUAL = r'\+='
 t_DOBLEIGUAL = r'\={2}'
-t_COMILLASIMPLE = r'\''
-t_COMILLADOBLE = r'\"'
 t_COMA = r'\,'
 t_PUNTO = r'\.'
+t_CADENA = r'"[a-zA-z0-9\s]*"'
 
-def t_NUMERO(t):
+def t_FLOTANTE(t):
+    r'(-?[1-9]\d*\.\d+)|0.0'
+    t.value = float(t.value)
+    return t
+
+
+def t_ENTERO(t):
     r'(-?[1-9]\d*)|0'
     t.value = int(t.value)
     return t
